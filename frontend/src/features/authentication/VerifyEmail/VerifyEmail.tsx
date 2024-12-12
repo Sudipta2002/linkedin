@@ -4,10 +4,65 @@ import Layout from '../components/Layout/Layout';
 import { Box } from '../components/Box/Box';
 import { Input } from '../components/Input/Input';
 import classes from './Verify.module.scss';
+import { useNavigate } from 'react-router-dom';
 export default function VerifyEmail() {
     const [errorMessage, setErrorMessage] = useState("");
     const [message, setMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const validateEmail = async (code: string) => {
+      setMessage("");
+      try {
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/v1/authentication/validate-email-verification-token?token=${code}`,
+          {
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.ok) {
+          setErrorMessage("");
+          navigate("/");
+        }
+        const { message } = await response.json();
+        setErrorMessage(message);
+      } catch (e) {
+        console.log(e);
+        setErrorMessage("Something went wrong, please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    const sendEmailVerificationToken = async () => {
+      setErrorMessage("");
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/v1/authentication/send-email-verification-token`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (response.ok) {
+          setErrorMessage("");
+          setMessage("Code sent successfully. Please check your email.");
+          return;
+        }
+        const { message } = await response.json();
+        setErrorMessage(message);
+      } catch (e) {
+        console.log(e);
+        setErrorMessage("Something went wrong, please try again.");
+      } finally {
+        setIsLoading(false);
+      }
+    };
     return (
     <Layout className={classes.root}>
     <Box>
@@ -17,7 +72,7 @@ export default function VerifyEmail() {
           e.preventDefault();
           setIsLoading(true);
           const code = e.currentTarget.code.value;
-        //   await validateEmail(code);
+          await validateEmail(code);
           setIsLoading(false);
         }}
       >
@@ -32,7 +87,7 @@ export default function VerifyEmail() {
           outline
           type="button"
           onClick={() => {
-            // sendEmailVerificationToken();
+            sendEmailVerificationToken();
           }}
           disabled={isLoading}
         >

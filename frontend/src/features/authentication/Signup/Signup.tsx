@@ -1,19 +1,41 @@
-import React, { useState } from 'react'
+import React, { FormEvent, useState } from 'react'
 import Layout from '../components/Layout/Layout'
 import classes from "./Signup.module.scss";
 import { Box } from '../components/Box/Box';
 import { Input } from '../components/Input/Input';
 import { Button } from '../components/Button/Button';
 import { Seperator } from '../components/Seperator/Seperator';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuthentication } from '../context/AuthenticationContextProvider';
 export default function Signup() {
-    const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signup } = useAuthentication();
+  const navigate = useNavigate();
+  const doSignup = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const email = e.currentTarget.email.value;
+    const password = e.currentTarget.password.value;
+    try {
+      await signup(email, password);
+      navigate("/");
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("An unknown error occurred.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <Layout className={classes.root}>
     <Box>
       <h1>Sign up</h1>
       <p>Make the most of your professional life.</p>
-      <form >
+      <form onSubmit={doSignup}>
         <Input type="email" id="email" label="Email" onFocus={() => setErrorMessage("")} />
         <Input
           label="Password"
@@ -27,7 +49,7 @@ export default function Signup() {
           <a href="">User Agreement</a>, <a href="">Privacy Policy</a>, and{" "}
           <a href="">Cookie Policy</a>.
         </p>
-        <Button disabled={false} type="submit">
+        <Button disabled={isLoading} type="submit">
           Agree & Join
         </Button>
       </form>
