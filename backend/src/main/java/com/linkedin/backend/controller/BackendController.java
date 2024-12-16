@@ -15,8 +15,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.Map;
 
 @ControllerAdvice
-//@RestController
-//@RequestMapping("/api/v1")
+
 public class BackendController {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

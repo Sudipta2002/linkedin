@@ -155,4 +155,16 @@ public class AuthenticationService {
             throw new IllegalArgumentException("Password reset token failed.");
         }
     }
+
+    public AuthenticationUser updateUserProfile(Long id, String firstName, String lastName, String company, String position, String location) {
+        AuthenticationUser user = authenticationUserRepository.findById(id).orElseThrow(()-> new RuntimeException("User not found"));
+
+        if(firstName!=null) user.setFirstName(firstName);
+        if(lastName!=null) user.setLastName(lastName);
+        if(company!=null) user.setCompany(company);
+        if(position!=null) user.setPosition(position);
+        if(location!=null) user.setLocation(location);
+
+        return authenticationUserRepository.save(user);
+    }
 }

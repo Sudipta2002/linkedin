@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity(name = "users")
+@Entity
+@Table(name = "users")
 public class AuthenticationUser {
 
     @Id
@@ -30,7 +31,7 @@ public class AuthenticationUser {
 
     private Boolean emailVerified = false;
     private String emailVerificationToken = null;
-//    private LocalDateTime emailVerificationTokenExpiryDate = null;
+
     @Column(columnDefinition = "datetime")
     private LocalDateTime emailVerificationTokenExpiryDate;
 
@@ -38,13 +39,75 @@ public class AuthenticationUser {
     private String password;
 
     private String passwordResetToken=null;
-//   private LocalDateTime passwordResetTokenExpiryDate = null;
+
     @Column(columnDefinition = "datetime")
     private LocalDateTime passwordResetTokenExpiryDate;
 
-    public AuthenticationUser(String email,String password){
+    private String firstName=null;
+
+    private String lastName=null;
+
+    private String company=null;
+
+    private String position =null;
+
+    private String location=null;
+
+    private Boolean profileComplete=false;
+
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+        updateProfileCompletionStatus();
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+        updateProfileCompletionStatus();
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+        updateProfileCompletionStatus();
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+        updateProfileCompletionStatus();
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+        updateProfileCompletionStatus();
+    }
+
+    public AuthenticationUser(String email, String password){
         this.email=email;
         this.password=password;
+    }
+
+    private void updateProfileCompletionStatus(){
+        this.profileComplete = (this.firstName!=null && this.lastName!=null&&this.position!=null&& this.location!=null);
     }
 
 }
