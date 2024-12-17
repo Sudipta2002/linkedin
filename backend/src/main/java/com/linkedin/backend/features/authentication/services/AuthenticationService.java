@@ -167,4 +167,9 @@ public class AuthenticationService {
 
         return authenticationUserRepository.save(user);
     }
+
+    public void deleteUser(Long id) {
+
+        authenticationUserRepository.deleteById(id);
+    }
 }

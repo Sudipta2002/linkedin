@@ -44,6 +44,13 @@ public class AuthenticationController {
         return "Email verified successfully.";
     }
 
+    @DeleteMapping("/delete")
+    public String deleteUser(@RequestAttribute("authenticatedUser")AuthenticationUser user ){
+        authenticationService.deleteUser(user.getId());
+
+        return "User deleted Successfully";
+    }
+
     @GetMapping("/send-email-verification-token")
     public String sendEmailVerificationToken(@RequestAttribute("authenticatedUser") AuthenticationUser user) throws NoSuchAlgorithmException {
         authenticationService.sendEmailVerificationToken(user.getEmail());

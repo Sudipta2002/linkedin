@@ -2,6 +2,7 @@ package com.linkedin.backend.features.authentication.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.linkedin.backend.features.feed.model.Post;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -56,25 +59,16 @@ public class AuthenticationUser {
     private Boolean profileComplete=false;
 
 
-    public String getFirstName() {
-        return firstName;
-    }
+    @JsonIgnore
+    @OneToMany(
+            mappedBy = "author",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Post>posts;
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getPosition() {
-        return position;
-    }
-
-    public String getLocation() {
-        return location;
-    }
+//    @CreationTimestamp
+//    private LocalDateTime creationDate;
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
