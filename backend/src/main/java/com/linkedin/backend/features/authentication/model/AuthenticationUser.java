@@ -58,6 +58,7 @@ public class AuthenticationUser {
 
     private Boolean profileComplete=false;
 
+    private String profilePicture=null;
 
     @JsonIgnore
     @OneToMany(

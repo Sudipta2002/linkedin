@@ -8,6 +8,9 @@ import com.linkedin.backend.features.authentication.utils.EmailService;
 import com.linkedin.backend.features.authentication.utils.Encoder;
 import com.linkedin.backend.features.authentication.utils.JsonWebToken;
 import jakarta.mail.MessagingException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +30,11 @@ public class AuthenticationService {
     private final Encoder encoder;
     private final EmailService emailService;
     private final int durationInMinutes =1;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+
     public AuthenticationService(JsonWebToken jsonWebToken, AuthenticationUserRepository authenticationUserRepository, Encoder encoder, EmailService emailService) {
         this.jsonWebToken = jsonWebToken;
         this.authenticationUserRepository = authenticationUserRepository;
@@ -168,8 +176,16 @@ public class AuthenticationService {
         return authenticationUserRepository.save(user);
     }
 
-    public void deleteUser(Long id) {
+    @Transactional
+    public void deleteUser(Long userId) {
 
-        authenticationUserRepository.deleteById(id);
+        AuthenticationUser user = entityManager.find(AuthenticationUser.class,userId);
+
+        if(user!=null){
+            entityManager.createNativeQuery("DELETE FROM posts_likes WHERE user_id =:userId").setParameter("userId",userId).executeUpdate();
+            authenticationUserRepository.deleteById(userId);
+
+        }
+
     }
 }
