@@ -1,10 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react"
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Loader } from "../components/Loader/Loader";
-interface User{
+import { Loader } from "../../../components/Loader/Loader";
+export interface User{
     id:string;
     email:string;
     emailVerified:boolean;
+    profilePicture?:string;
+    firstName?: string;
+    lastName?: string;
+    company?: string;
+    position?: string;
+    location?: string;
+    profileComplete: boolean;
+  
 }
 interface AuthenticationContextType{
     user:User | null;
@@ -17,7 +25,11 @@ interface AuthenticationContextType{
 const AuthenticationContext = createContext<AuthenticationContextType|null>(null);
 
 export function useAuthentication(){
-    return useContext(AuthenticationContext);
+  const context = useContext(AuthenticationContext);
+  if (!context) {
+    throw new Error("useAuthentication must be used within an AuthenticationContextProvider");
+  }
+  return context;
 }
 
 
@@ -26,9 +38,9 @@ function AuthenticationContextProvider() {
     const location = useLocation();
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const isOnAuthPage = location.pathname==='/login'||
-    location.pathname==='/signup'||
-    location.pathname==='/request-password-reset';
+    const isOnAuthPage = location.pathname==='/authentication/login'||
+    location.pathname==='/authentication/signup'||
+    location.pathname==='/authentication/request-password-reset';
     const login = async (email: string, password: string) => {
         const response = await fetch(import.meta.env.VITE_API_URL + "/api/v1/authentication/login", {
           method: "POST",
@@ -94,7 +106,7 @@ function AuthenticationContextProvider() {
         return <Loader />;
       }
       if (!isLoading && !user && !isOnAuthPage) {
-        return <Navigate to="/login" />;
+        return <Navigate to="/authentication/login" />;
       }
       if (user && user.emailVerified && isOnAuthPage) {
         return <Navigate to="/" />;
@@ -103,7 +115,7 @@ function AuthenticationContextProvider() {
 
   return (
     <AuthenticationContext.Provider value={{user,login,logout,signup}}>
-        {user && !user.emailVerified ? <Navigate to="/verify-email" /> : null}  
+        {user && !user.emailVerified ? <Navigate to="/authentication/verify-email" /> : null}  
         <Outlet/>
     </AuthenticationContext.Provider>
   )

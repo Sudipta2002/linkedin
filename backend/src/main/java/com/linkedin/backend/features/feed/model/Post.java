@@ -50,7 +50,7 @@ public class Post {
     )
     private Set<AuthenticationUser>likes;
 
-    @JsonIgnore
+//    @JsonIgnore
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Comment>comments;
 

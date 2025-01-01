@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '../components/Button/Button';
-import { Input } from '../components/Input/Input';
-import Layout from '../components/Layout/Layout';
+import { Input } from '../../../components/Input/Input';
+import Layout from '../components/AuthenticationLayout/AuthenticationLayout';
 import { Box } from '../components/Box/Box';
 import classes  from './ResetPassword.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ export default function ResetPassword() {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
       <Box>
         <h1>Reset Password</h1>
         {!emailSent ? (
@@ -38,7 +38,7 @@ export default function ResetPassword() {
             <Button
               outline
               onClick={() => {
-                navigate("/login");
+                navigate("/authentication/login");
               }}
               disabled={false}
             >
@@ -83,6 +83,6 @@ export default function ResetPassword() {
           </form>
         )}
       </Box>
-    </Layout>
+    </div>
   )
 }

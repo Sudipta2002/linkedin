@@ -1,8 +1,8 @@
 import React, { FormEvent, useState } from 'react'
-import Layout from '../components/Layout/Layout'
+import Layout from '../components/AuthenticationLayout/AuthenticationLayout'
 import classes from "./Signup.module.scss";
 import { Box } from '../components/Box/Box';
-import { Input } from '../components/Input/Input';
+import { Input } from '../../../components/Input/Input';
 import { Button } from '../components/Button/Button';
 import { Seperator } from '../components/Seperator/Seperator';
 import { Link, useNavigate } from 'react-router-dom';
@@ -31,7 +31,7 @@ export default function Signup() {
     }
   };
   return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
     <Box>
       <h1>Sign up</h1>
       <p>Make the most of your professional life.</p>
@@ -55,9 +55,9 @@ export default function Signup() {
       </form>
       <Seperator>Or</Seperator>
       <div className={classes.register}>
-        Already on LinkedIn? <Link to="/login">Sign in</Link>
+        Already on LinkedIn? <Link to="/authentication/login">Sign in</Link>
       </div>
     </Box>
-  </Layout>
+  </div>
   )
 }

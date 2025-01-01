@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Button } from '../components/Button/Button';
-import Layout from '../components/Layout/Layout';
+import Layout from '../components/AuthenticationLayout/AuthenticationLayout';
 import { Box } from '../components/Box/Box';
-import { Input } from '../components/Input/Input';
+import { Input } from '../../../components/Input/Input';
 import classes from './Verify.module.scss';
 import { useNavigate } from 'react-router-dom';
 export default function VerifyEmail() {
@@ -64,7 +64,7 @@ export default function VerifyEmail() {
       }
     };
     return (
-    <Layout className={classes.root}>
+    <div className={classes.root}>
     <Box>
       <h1>Verify your Email</h1>
       <form
@@ -95,6 +95,6 @@ export default function VerifyEmail() {
         </Button>
       </form>
     </Box>
-  </Layout>
+  </div>
   )
 }
